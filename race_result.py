@@ -1,6 +1,6 @@
 class RaceResult:
-    def __init__(self, order = None, box_num = None, horse_num = None, horse_name = None, horse_sex = None, horse_age = None, burden_weight = None, jockey = None, record = None, margin = None, last_passing_rank = None, second_passing_rank = None, before_goal_time = None, single_odds = None, popularity = None, horse_weight = None, horse_weight_delta = None, trainer = None, owner = None, prize = None):
-        self.order            = order            # 着順
+    def __init__(self, finish_order = None, box_num = None, horse_num = None, horse_name = None, horse_sex = None, horse_age = None, burden_weight = None, jockey = None, record = None, margin = None, last_passing_rank = None, second_passing_rank = None, before_goal_time = None, single_odds = None, popularity = None, horse_weight = None, horse_weight_delta = None, trainer = None, owner = None, prize = None):
+        self.finish_order            = finish_order            # 着順
         self.box_num          = box_num          # 枠番
         self.horse_num        = horse_num        # 馬番
         self.horse_name       = horse_name       # 馬名
@@ -22,12 +22,12 @@ class RaceResult:
         self.prize            = prize            # 賞金(万円)
 
     @property
-    def order(self):
-        return self._order
+    def finish_order(self):
+        return self._finish_order
 
-    @order.setter
-    def order(self, order):
-        self._order = order
+    @finish_order.setter
+    def finish_order(self, finish_order):
+        self._finish_order = finish_order
 
     @property
     def box_num(self):
