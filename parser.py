@@ -1,9 +1,10 @@
 from race_result import RaceResult
+import textwrap
 import re
 
 class Parser:
     @classmethod
-    def parse_race(cls, race_table):
+    def parse_race(cls, race_table, race_id):
         for table in race_table.find_all("table", class_="race_table_01 nk_tb_common"):
             race_results = []
             for tr in table.find_all("tr"):
@@ -12,7 +13,6 @@ class Parser:
                     continue
                 cols = []
                 for i, td in enumerate(tr.find_all("td")):
-                    print("index: {0}".format(i))
                     link = td.find("a")
 
                     content = None
@@ -20,10 +20,10 @@ class Parser:
                         content = td.string
                     elif link and link.string and link.string != '\n':
                         content = link.string
-                    print(content)
                     cols.append(content)
                 result = RaceResult()
-                result.order               = cols[0]
+                result.race_id             = race_id
+                result.finish_order        = cols[0]
                 result.box_num             = cols[1]
                 result.horse_num           = cols[2]
                 result.horse_name          = cols[3]

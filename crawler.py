@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from parser import Parser
+from race_id import RaceId
+from race_result import RaceResult
 
 class Crawler:
     def __init__(self, parser = "html.parser"):
@@ -13,6 +15,6 @@ class Crawler:
 crawler = Crawler()
 html = crawler.get("http://db.netkeiba.com/race/201805021010/")
 
-race_results = Parser.parse_race(html)
-print(race_results)
-
+race_id = RaceId()
+race_results = Parser.parse_race(html, race_id.increment())
+RaceResult.save_all(race_results)

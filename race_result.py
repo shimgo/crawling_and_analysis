@@ -1,25 +1,37 @@
+from db import DB
+import textwrap
+
 class RaceResult:
-    def __init__(self, finish_order = None, box_num = None, horse_num = None, horse_name = None, horse_sex = None, horse_age = None, burden_weight = None, jockey = None, record = None, margin = None, last_passing_rank = None, second_passing_rank = None, before_goal_time = None, single_odds = None, popularity = None, horse_weight = None, horse_weight_delta = None, trainer = None, owner = None, prize = None):
-        self.finish_order            = finish_order            # 着順
-        self.box_num          = box_num          # 枠番
-        self.horse_num        = horse_num        # 馬番
-        self.horse_name       = horse_name       # 馬名
-        self.horse_sex        = horse_sex        # 性齢
-        self.horse_age        = horse_age        
+    def __init__(self, race_id = None, finish_order = None, box_num = None, horse_num = None, horse_name = None, horse_sex = None, horse_age = None, burden_weight = None, jockey = None, record = None, margin = None, last_passing_rank = None, second_passing_rank = None, before_goal_time = None, single_odds = None, popularity = None, horse_weight = None, horse_weight_delta = None, trainer = None, owner = None, prize = None):
+        self.race_id             = race_id
+        self.finish_order        = finish_order        # 着順
+        self.box_num             = box_num             # 枠番
+        self.horse_num           = horse_num           # 馬番
+        self.horse_name          = horse_name          # 馬名
+        self.horse_sex           = horse_sex           # 性齢
+        self.horse_age           = horse_age
         self.burden_weight       = burden_weight       # 斤量
-        self.jockey           = jockey           # 騎手
-        self.record           = record           # タイム(秒)
-        self.margin           = margin           # 着差
-        self.last_passing_rank= last_passing_rank     # 第4コーナー通過順位
-        self.second_passing_rank     = second_passing_rank     # 第3コーナー通過順位
-        self.before_goal_time = before_goal_time # 上り
-        self.single_odds      = single_odds      # 単勝
-        self.popularity       = popularity       # 人気
-        self.horse_weight     = horse_weight     # 馬体重
-        self.horse_weight_delta = horse_weight_delta # 馬体重変化
-        self.trainer          = trainer          # 調教師
-        self.owner            = owner            # 馬主
-        self.prize            = prize            # 賞金(万円)
+        self.jockey              = jockey              # 騎手
+        self.record              = record              # タイム(秒)
+        self.margin              = margin              # 着差
+        self.last_passing_rank   = last_passing_rank   # 第4コーナー通過順位
+        self.second_passing_rank = second_passing_rank # 第3コーナー通過順位
+        self.before_goal_time    = before_goal_time    # 上り
+        self.single_odds         = single_odds         # 単勝
+        self.popularity          = popularity          # 人気
+        self.horse_weight        = horse_weight        # 馬体重
+        self.horse_weight_delta  = horse_weight_delta  # 馬体重変化
+        self.trainer             = trainer             # 調教師
+        self.owner               = owner               # 馬主
+        self.prize               = prize               # 賞金(万円)
+
+    @property
+    def race_id(self):
+        return self._race_id
+
+    @race_id.setter
+    def race_id(self, race_id):
+        self._race_id = race_id
 
     @property
     def finish_order(self):
@@ -180,3 +192,36 @@ class RaceResult:
     @prize.setter
     def prize(self, prize):
         self._prize = prize
+
+    @classmethod
+    def save_all(cls, race_results):
+        INSERT_RACE_RESULTS = textwrap.dedent('''\
+            INSERT INTO race_results VALUES(
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''')
+        params = []
+        for r in race_results:
+            params.append((
+                r.race_id,
+                r.finish_order,
+                r.box_num,
+                r.horse_num,
+                r.horse_name,
+                r.horse_sex,
+                r.horse_age,
+                r.burden_weight,
+                r.jockey,
+                r.record,
+                r.margin,
+                r.last_passing_rank,
+                r.second_passing_rank,
+                r.before_goal_time,
+                r.single_odds,
+                r.popularity,
+                r.horse_weight,
+                r.horse_weight_delta,
+                r.trainer,
+                r.owner,
+                r.prize
+            ))
+        DB.exec(str(INSERT_RACE_RESULTS), params)
