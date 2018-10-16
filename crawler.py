@@ -13,8 +13,12 @@ class Crawler:
         return BeautifulSoup(res.content, self.__parser)
 
 crawler = Crawler()
-html = crawler.get("http://db.netkeiba.com/race/201805021010/")
+html = crawler.get("http://db.netkeiba.com/race/201905021010/")
 
 race_id = RaceId()
 race_results = Parser.parse_race(html, race_id.increment())
-RaceResult.save_all(race_results)
+
+print(race_results)
+
+if race_results:
+    RaceResult.save_all(race_results)

@@ -5,8 +5,8 @@ import re
 class Parser:
     @classmethod
     def parse_race(cls, race_table, race_id):
+        race_results = []
         for table in race_table.find_all("table", class_="race_table_01 nk_tb_common"):
-            race_results = []
             for tr in table.find_all("tr"):
                 tds = tr.find_all("td")
                 if len(tds) == 0:
