@@ -2,7 +2,7 @@ from db import DB
 import textwrap
 
 class RaceResult:
-    def __init__(self, race_id = None, finish_order = None, box_num = None, horse_num = None, horse_name = None, horse_sex = None, horse_age = None, burden_weight = None, jockey = None, record = None, margin = None, last_passing_rank = None, second_passing_rank = None, before_goal_time = None, single_odds = None, popularity = None, horse_weight = None, horse_weight_delta = None, trainer = None, owner = None, prize = None):
+    def __init__(self, race_id = None, finish_order = None, box_num = None, horse_num = None, horse_name = None, horse_sex = None, horse_age = None, burden_weight = None, jockey = None, record = None, margin = None, last_passing_rank = None, second_passing_rank = None, third_passing_rank = None, fourth_passing_rank = None, before_goal_time = None, single_odds = None, popularity = None, horse_weight = None, horse_weight_delta = None, trainer = None, owner = None, prize = None):
         self.race_id             = race_id
         self.finish_order        = finish_order        # 着順
         self.box_num             = box_num             # 枠番
@@ -14,8 +14,10 @@ class RaceResult:
         self.jockey              = jockey              # 騎手
         self.record              = record              # タイム(秒)
         self.margin              = margin              # 着差
-        self.last_passing_rank   = last_passing_rank   # 第4コーナー通過順位
-        self.second_passing_rank = second_passing_rank # 第3コーナー通過順位
+        self.last_passing_rank   = last_passing_rank   # 最終第4コーナー通過順位
+        self.second_passing_rank = second_passing_rank # 最終第3コーナー通過順位
+        self.third_passing_rank  = third_passing_rank  # 最終第2コーナー通過順位
+        self.fourth_passing_rank = fourth_passing_rank # 最終第1コーナー通過順位
         self.before_goal_time    = before_goal_time    # 上り
         self.single_odds         = single_odds         # 単勝
         self.popularity          = popularity          # 人気
@@ -130,6 +132,22 @@ class RaceResult:
         self._last_passing_rank = last_passing_rank
 
     @property
+    def third_passing_rank(self):
+        return self._third_passing_rank
+
+    @third_passing_rank.setter
+    def third_passing_rank(self, third_passing_rank):
+        self._third_passing_rank = third_passing_rank
+
+    @property
+    def fourth_passing_rank(self):
+        return self._fourth_passing_rank
+
+    @fourth_passing_rank.setter
+    def fourth_passing_rank(self, fourth_passing_rank):
+        self._fourth_passing_rank = fourth_passing_rank
+
+    @property
     def before_goal_time(self):
         return self._before_goal_time
 
@@ -197,7 +215,7 @@ class RaceResult:
     def save_all(cls, race_results):
         INSERT_RACE_RESULTS = textwrap.dedent('''\
             INSERT INTO race_results VALUES(
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''')
         params = []
         for r in race_results:
@@ -215,6 +233,8 @@ class RaceResult:
                 r.margin,
                 r.last_passing_rank,
                 r.second_passing_rank,
+                r.third_passing_rank,
+                r.fourth_passing_rank,
                 r.before_goal_time,
                 r.single_odds,
                 r.popularity,

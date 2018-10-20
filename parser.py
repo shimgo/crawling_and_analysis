@@ -5,6 +5,8 @@ import re
 class Parser:
     @classmethod
     def parse_race(cls, race_table, race_id):
+        NO_DATA = ['取', '中']
+
         race_results = []
         for table in race_table.find_all("table", class_="race_table_01 nk_tb_common"):
             for tr in table.find_all("tr"):
@@ -21,6 +23,10 @@ class Parser:
                     elif link and link.string and link.string != '\n':
                         content = link.string
                     cols.append(content)
+
+                if cols[0] in NO_DATA:
+                    continue
+
                 result = RaceResult()
                 result.race_id             = race_id
                 result.finish_order        = cols[0]
@@ -34,9 +40,14 @@ class Parser:
                 record_match               = re.match(r"^([0-9]+):(.+)$", cols[7])
                 result.record              = float(record_match.group(1)) * 60 + float(record_match.group(2))
                 result.margin              = cols[8] or ""
-                passing_rank_match         = re.match(r"^([0-9]+)-([0-9]+)$", cols[10])
-                result.last_passing_rank   = passing_rank_match.group(2)
-                result.second_passing_rank = passing_rank_match.group(1)
+                passing_rank_stack = []
+                passing_rank_match         = re.match(r"^([0-9]+)(-([0-9]+))?(-([0-9]+))?(-([0-9]+))?$", cols[10])
+                for x in range(1, 9, 2):
+                    passing_rank_stack.append(passing_rank_match.group(x))
+                result.last_passing_rank   = passing_rank_stack.pop()
+                result.second_passing_rank = passing_rank_stack.pop()
+                result.third_passing_rank  = passing_rank_stack.pop()
+                result.forth_passing_rank  = passing_rank_stack.pop()
                 result.before_goal_time    = cols[11]
                 result.single_odds         = cols[12]
                 result.popularity          = cols[13]

@@ -17,6 +17,8 @@ def setup_db():
             margin TEXT,
             last_passing_rank INTEGER,
             second_passing_rank INTEGER,
+            third_passing_rank INTEGER,
+            fourth_passing_rank INTEGER,
             before_goal_time REAL,
             single_odds REAL,
             popularity INTEGER,
